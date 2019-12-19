@@ -1,5 +1,5 @@
-import DefaultPage from './DefaultPage';
+import App from './App.component';
 
 export {
-    DefaultPage
+    App
 }

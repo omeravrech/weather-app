@@ -4,6 +4,7 @@ import { HeaderLayout, FooterLayout } from './Layouts';
 import { DefaultPage } from './Components';
 import axios from './api/AccuWeather';
 
+
 const background = '#2185d0';
 
 class App extends Component {
@@ -11,7 +12,9 @@ class App extends Component {
     state = { weatherInfo: {}}
 
     onSearchSubmit = (value) => {
-        axios.get(`/forecasts/v1/daily/5day/${value}`)
+        axios.get(`/forecasts/v1/daily/5day/${value}`, {
+            params: { metric: true }
+        })
         .then(({data, status}) => {
             if (status === 200) {
                 data.LocationName = value;

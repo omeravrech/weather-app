@@ -115,8 +115,9 @@ class SearchBar extends Component {
                         value={ suggestion.LocalizedName }
                         onClick={ this.onSuggestedValueClicked }
                         style={ (indx ===  activeSuggestion)?{ background: 'gray'}:{} }
-                    >
-                        <div className="content">{ `${ suggestion.LocalizedName }, ${ suggestion.Country.LocalizedName }` }</div>
+                    >  
+                        <div className="title">{ suggestion.Country.LocalizedName }</div>
+                        <div className="content">{ suggestion.LocalizedName }</div>
                     </div>
                 );
             })}
