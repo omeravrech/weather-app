@@ -6,9 +6,39 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+} 
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+div { border: 0px black solid }
+
+div .weather {
+    font-size: 2vh black bold;
+    color: rgb(90, 90, 90);
+}
+div.weather.hdr {
+  font: 4vh black bold;
+}
+div.weather.hdr.title {
+   font-size: 6vh;
+}
+div.weather.body-temp {
+  padding: 3.5vh;
+  font-size: 10vh;
+}
+
+img.weather {
+    height: 100px; /* Visible height */
+    width:  100px; /* Visible width */
+    border: 0px;
+    display: block;
+}
+img.weather.sunny {
+    background-image: url("./weather_icons/sunny.png");
+}
+
+img.weather.rain {
+    background-image: url("./weather_icons/rain.png");
 }

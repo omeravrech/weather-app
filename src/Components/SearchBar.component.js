@@ -1,61 +1,102 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 
-export default class SearchBar extends Component {
+import { fetch_city_info } from '../Redux/Actions/weather.action'
 
+class SearchBar extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            userInput: '',
+            userInput: "",
             suggestions: [],
-            selectedIndex: -1,
+            suggestionIndex: -1,
         }
     }
 
-    onKeyDown = ({ key, keyCode, currentTarget }) => {
-        var { suggestions, selectedIndex, userInput } = this.state;
-        // If user press enter
+    onKeyPressed = (event) => {
+        const { keyCode } = event;
+        const { indexOfSelectedOption, suggestions, userInput } = this.state;
+    
+        //User press enter to search city
         if (keyCode === 13) {
-            if (suggestions.length && selectedIndex > -1) {
-                userInput = suggestions[selectedIndex].LocalizedName
-            }
             if (userInput !== '' && userInput !== ' ') {
-                this.setState({
-                    userInput,
-                    suggestions: [],
-                    selectedIndex: -1
-                });
-                // @TODO: controlled event for userInput 
+                this.props.fetch_city_info(userInput);
             }
-            
         }
-        // If user press letter a-z, A-Z or space
-        // (other character not allowed)
-        else if ((keyCode >=65 && keyCode <= 90) || keyCode === 32)
-        {
-            let { userInput } = this.state;
-            this.setState({userInput: `${userInput}${key}` })
+        // If user press UP, there are suggestions and we not out the range
+        else if(keyCode === 38 && suggestions.length && indexOfSelectedOption > 0) {
+            this.setState({indexOfSelectedOption: indexOfSelectedOption - 1});
         }
-        // If user press backspace
-        else if (keyCode === 8) {
-            let { userInput } = this.state;
-            this.setState({userInput: userInput.slice(0, -1) })
+        // If user press UP, there are suggestions and we not out the range
+        else if(keyCode === 40 && suggestions.length && suggestions.length-1 > indexOfSelectedOption) {
+            this.setState({indexOfSelectedOption: indexOfSelectedOption + 1});
+        }
+    }
+
+    renderSuggestionOptions = () => {}
+    
+    render = () => {
+        const {userInput} = this.state;
+
+        return (
+            <div className="ui category search item">
+                <div className="ui icon input">
+                    <input
+                        className="prompt"
+                        type="text"
+                        placeholder="Search city...  "
+                        onKeyDown={ this.onKeyPressed }
+                        value={ userInput }
+                        onChange={ e => this.setState({userInput: e.target.value}) }
+                    />
+                    <i className="search icon"></i>
+                </div>
+                { this.renderSuggestionOptions() }
+            </div>
+        );
+        
+    }
+}
+function mapDispacthToProps(dispatch) {
+    return bindActionCreators({ fetch_city_info }, dispatch);
+}
+
+export default connect(null, mapDispacthToProps)(SearchBar);
+/*
+
+
+    onKeyDown = ({ key, keyCode }) => {
+       
+        if (keyCode === 13) {
+            //User press enter to search city from suggestion list
+            // if user press enter to search a city
+            if (userInput !== '' && userInput !== ' ') {
+                if (indexOfSelectedOption > -1 && suggestions.length) {
+                    cityHaveChoosen(suggestions[indexOfSelectedOption]);
+                } else {
+                    suggestions.forEach(element => {
+                        if (element.LocalizedName === userInput) {
+                            cityHaveChoosen(element);
+                        }
+                    });
+                }
+            }
         }
 
-        // If user press UP, there are suggestions and we not out the range
-        else if(keyCode === 38 && suggestions.length && selectedIndex > -1) {
-            selectedIndex--;
-            this.setState({selectedIndex});
-        }
-        // If user press UP, there are suggestions and we not out the range
-        else if(keyCode === 40 && suggestions.length && suggestions.length > selectedIndex) {
-            selectedIndex++;
-            this.setState({selectedIndex});
+    }
+
+    onDropDownClicked = (event) => {
+        const {id} = event.target;
+        const { indexOfSelectedOption, suggestions } = this.state;
+        if (id > -1 && id < suggestions.length) {
+            indexOfSelectedOption(suggestions[id]);
         }
     }
 
     renderSuggestionOptions = () => {
-        const { suggestions, selectedIndex } = this.state;
+        const { suggestions, indexOfSelectedOption } = this.state;
 
         if (suggestions.length < 1) {
             return (<div className="results transition hidden"></div>);
@@ -71,8 +112,10 @@ export default class SearchBar extends Component {
                             </div>
                             <div className="results" key={ `city_inner_results_key_${Key}` }>
                                 <div
-                                    className={ (selectedIndex===indx)?"result active":"result" }
+                                    className={ (indexOfSelectedOption === indx)?"result active":"result" }
                                     key={ `city_result_key_${Key}`}
+                                    id={ indx }
+                                    onClick= {this.onDropDownClicked }
                                     onMouseOver={ (e) => { e.target.className = "result active" }}
                                     onMouseLeave={ (e) => { e.target.className = "result" }}
                                 >
@@ -85,59 +128,4 @@ export default class SearchBar extends Component {
             </div>
         );
     }
-
-    render() {
-        const { userInput } = this.state;
-
-        return(
-            <div className="ui teal secondary inverted menu">
-                <div className="ui category search item">
-                    <div className="ui icon input">
-                        <input
-                            className="prompt"
-                            type="text"
-                            placeholder="Search city...  "
-                            onKeyDown={ this.onKeyDown }
-                            value={ userInput }
-                            readOnly
-                        />
-                        <i className="search icon"></i>
-                    </div>
-                    { this.renderSuggestionOptions() }
-                </div>
-                <div className="right menu">
-                    <div className="item">
-
-<div className="ui simple labeled dropdown button">
-    <div className="text">Menu</div>
-    <i className="dropdown icon"></i>
-    <div className="menu">
-        <div className="item"><i className="home icon"></i> Home</div>
-        <div className="item"><i className="star icon"></i> Favorite</div>
-    </div>
-</div>
-
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
-
-
-    
-
-
-
-/*
-                    <div className="teal link item"
-                        onMouseOver={ (e) => e.target.className = "browse item active" }
-                        onMouseOut={ (e) => e.target.className = "browse item" }
-                    >Home</div>
-                    <div
-                        className="teal link item"
-                        onMouseOver={ (e) => e.target.className = "browse item active" }
-                        onMouseOut={ (e) => e.target.className = "browse item" }
-                    >Favorite</div>
-                </div>
 */
