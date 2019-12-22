@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 
-import { fetch_city_info } from '../Redux/Actions/weather.action'
+import { fetch_city_info } from '../Redux/weather.action'
 
 class SearchBar extends Component {
     constructor(props) {
@@ -14,7 +14,6 @@ class SearchBar extends Component {
             suggestionIndex: -1,
         }
     }
-
     onKeyPressed = (event) => {
         const { keyCode } = event;
         const { indexOfSelectedOption, suggestions, userInput } = this.state;
@@ -41,7 +40,6 @@ class SearchBar extends Component {
         const {userInput} = this.state;
 
         return (
-            <div className="ui category search item">
                 <div className="ui icon input">
                     <input
                         className="prompt"
@@ -53,8 +51,6 @@ class SearchBar extends Component {
                     />
                     <i className="search icon"></i>
                 </div>
-                { this.renderSuggestionOptions() }
-            </div>
         );
         
     }

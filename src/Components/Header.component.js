@@ -1,23 +1,33 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import SearchBar from "./SearchBar.component";
 
 export default class Header extends Component {
     
+    onMouseOver = (event) => {
+        console.log(event.target);
+    }
     
     render() {
-
         return(
-            <div className="ui teal secondary inverted menu">
-                < SearchBar fetchCityData={ this.props.fetchCityData }/>
+            <div className="ui teal inverted secondary menu">
+                <div className="ui category search item">
+                    <SearchBar />
+                </div>
                 <div className="right menu">
-                    <div className="item">
-                        <div className="ui simple labeled dropdown button">
-                            <div className="text">Menu</div>
-                            <i className="dropdown icon"></i>
-                            <div className="menu">
-                                <div className="item"><i className="home icon"></i> Home</div>
-                                <div className="item"><i className="star icon"></i> Favorite</div>
-                            </div>
+                    <div className="ui dropdown item" onMouseOver={this.onMouseOver}>
+                        Menu
+                        <i className="dropdown icon"></i>
+                        <div className="menu">
+                            { this.props.routes.map((route ,indx) => {
+                                return (    
+                                    <div className="icon item" key={indx}>
+                                        <Link to={route.path} key={indx}>
+                                            <i className={route.icon + "icon"}></i>{route.display}
+                                        </Link>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
