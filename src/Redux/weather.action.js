@@ -1,4 +1,4 @@
-import AccuWeatherAPI from './../API/AccuWeather';
+import AccuWeatherAPI from '../api/AccuWeather';
 
 export const FETCH_CITY_INFO = 'FETCH_CITY_INFO';
 export const FETCH_CITY_DATA = 'FETCH_CITY_DATA';
