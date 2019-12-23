@@ -9,7 +9,7 @@ export default (function() {
         });
         instance.interceptors.request.use((config) => {
             config.params = config.params || {};
-            config.params['apikey'] = 'zDYBWxPNyZGwQNbaTrTWG2Pbq4OpCFvE';
+            config.params['apikey'] = 'OKicuF2eorIJg6DpSoGVAQkHch6bCMby';
             return config;
         });
         return instance;

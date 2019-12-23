@@ -29,7 +29,7 @@ class WeatherPage extends Component {
             return (
                 <div className="ui segments">
                     <div className="ui teal inverted segment">
-                        <h1>Please choose a city</h1>
+                        <h1>Can't find your requested city.<br /> Please try again...</h1>
                     </div>
                     <div className="ui segment">
                         <div className="ui placeholder">

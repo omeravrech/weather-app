@@ -17,9 +17,11 @@ export const fetch_city_data = (state = {city: [], flag: false}, action) => {
 }
 export const fetch_forecast = (state = {current_status: [], forecast: [] }, action) => {
     if (action.type === FETCH_CITY_DATA) {
+        const current_status = action.payload[0] || { data: []}
+        const forecast = action.payload[1] || { data: []}
         return {
-            current_status: action.payload[0].data || [],
-            forecast: action.payload[1].data || []
+            current_status: current_status.data,
+            forecast: forecast.data
         }
     } else {
         return state;

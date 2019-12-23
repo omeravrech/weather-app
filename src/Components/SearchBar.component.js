@@ -1,18 +1,20 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import AccuWeatherAPI from '../api/AccuWeather';
 
-import { fetch_city_info } from '../Redux/weather.action'
+import { fetch_city_info } from '../Redux/weather.action';
 
 class SearchBar extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            userInput: "",
-            suggestions: [],
             suggestionIndex: -1,
+            userInput: "",
+            suggestions: []
         }
+        this.props.fetch_city_info("Tel Aviv, Israel");
     }
     onKeyPressed = (event) => {
         const { keyCode } = event;
@@ -34,60 +36,45 @@ class SearchBar extends Component {
         }
     }
 
-    renderSuggestionOptions = () => {}
-    
-    render = () => {
-        const {userInput} = this.state;
-
-        return (
-                <div className="ui icon input">
-                    <input
-                        className="prompt"
-                        type="text"
-                        placeholder="Search city...  "
-                        onKeyDown={ this.onKeyPressed }
-                        value={ userInput }
-                        onChange={ e => this.setState({userInput: e.target.value}) }
-                    />
-                    <i className="search icon"></i>
-                </div>
-        );
-        
-    }
-}
-function mapDispacthToProps(dispatch) {
-    return bindActionCreators({ fetch_city_info }, dispatch);
-}
-
-export default connect(null, mapDispacthToProps)(SearchBar);
-/*
-
-
-    onKeyDown = ({ key, keyCode }) => {
-       
-        if (keyCode === 13) {
-            //User press enter to search city from suggestion list
-            // if user press enter to search a city
-            if (userInput !== '' && userInput !== ' ') {
-                if (indexOfSelectedOption > -1 && suggestions.length) {
-                    cityHaveChoosen(suggestions[indexOfSelectedOption]);
-                } else {
-                    suggestions.forEach(element => {
-                        if (element.LocalizedName === userInput) {
-                            cityHaveChoosen(element);
-                        }
-                    });
-                }
-            }
-        }
-
-    }
-
     onDropDownClicked = (event) => {
-        const {id} = event.target;
-        const { indexOfSelectedOption, suggestions } = this.state;
+        const {id} = event.currentTarget;
+        const { suggestions } = this.state;
         if (id > -1 && id < suggestions.length) {
-            indexOfSelectedOption(suggestions[id]);
+            console.log(suggestions[id])
+            this.props.fetch_city_info(suggestions[id].LocalizedName + ", " + suggestions[id].Country.LocalizedName);
+            this.setState({
+                suggestions: [],
+                userInput: "",
+                indexOfSelectedOption: -1
+            })
+        }
+    }
+
+    onInputChanged = (event) => {
+        const {value} = event.target;
+
+        if (value !== '' || value !== ' ') {
+            AccuWeatherAPI.get('/locations/v1/cities/autocomplete', {params: {q: value }})
+            .then(({data}) => { 
+                this.setState({
+                    userInput: value,
+                    suggestions: data,
+                    suggestionIndex: -1,
+        
+                })
+            }).catch((err) => {
+                this.setState({
+                    userInput: value,
+                    suggestions: [],
+                    suggestionIndex: -1,
+                });
+            })
+        } else {
+            this.setState({
+                userInput: value,
+                suggestions: [],
+                suggestionIndex: -1,
+            })
         }
     }
 
@@ -95,33 +82,58 @@ export default connect(null, mapDispacthToProps)(SearchBar);
         const { suggestions, indexOfSelectedOption } = this.state;
 
         if (suggestions.length < 1) {
-            return (<div className="results transition hidden"></div>);
+            return;
         }
 
         return (
-            <div className="results" style={{display: "block"}}>
-                { suggestions.map(({Key, LocalizedName, Country}, indx) => {
-                    return (
-                        <div className="category" key={ `city_category_key_${Key}` }>
-                            <div className="name" key={ `city_country_key_${Key}` }>
-                                { Country.LocalizedName }
+            <div className="results transition visible" style={{display: 'block'}}>
+            { suggestions.map(({Key, LocalizedName, Country}, indx) => {
+                return (
+                    <div className="category" key={`cat_${Key}`} >
+                        <div className="name" key={`name_${Key}`}>{ Country.LocalizedName }</div>
+                        <div className="results" key={`inner_results_${Key}`}>
+                            <div
+                                className={ (indexOfSelectedOption === indx)?"result active":"result" }
+                                key={ `result_${Key}` }
+                                id={ indx }
+                                onClick= {this.onDropDownClicked }
+                                onMouseOver={ (e) => { e.target.className = "result active" }}
+                                onMouseLeave={ (e) => { e.target.className = "result" }}
+                            > { LocalizedName }
                             </div>
-                            <div className="results" key={ `city_inner_results_key_${Key}` }>
-                                <div
-                                    className={ (indexOfSelectedOption === indx)?"result active":"result" }
-                                    key={ `city_result_key_${Key}`}
-                                    id={ indx }
-                                    onClick= {this.onDropDownClicked }
-                                    onMouseOver={ (e) => { e.target.className = "result active" }}
-                                    onMouseLeave={ (e) => { e.target.className = "result" }}
-                                >
-                                    { LocalizedName }
-                                </div>
-                            </div>    
                         </div>
-                    )
-                })}
+                    </div>  
+                );
+            })}
             </div>
         );
     }
-*/
+    
+    render = () => {
+        console.log(this.state);
+        const { userInput } = this.state;
+        return (
+            <div className="ui search category focus">
+                <div className="ui icon input">
+                    <input
+                        className="prompt"
+                        type="text"
+                        placeholder="Search city...  "
+                        onKeyDown={ this.onKeyPressed }
+                        value={ userInput }
+                        onChange={ this.onInputChanged }
+                    />
+                    <i className="search icon"></i>
+                </div>
+                {this.renderSuggestionOptions()}
+            </div>
+        );
+        
+    }
+}
+
+function mapDispacthToProps(dispatch) {
+    return bindActionCreators({ fetch_city_info }, dispatch);
+}
+
+export default connect(null, mapDispacthToProps)(SearchBar);
