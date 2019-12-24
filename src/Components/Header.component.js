@@ -4,28 +4,36 @@ import SearchBar from "./SearchBar.component";
 
 export default class Header extends Component {
     
-    onMouseOver = (event) => {
-        console.log(event.target);
-    }
-    
+    state = {displayMenu: false}
+
     render() {
         return(
             <div className="ui teal inverted secondary menu">
                 <div className="ui category search item">
                     <SearchBar />
                 </div>
-                <div className="right menu">
-                    <div className="ui dropdown item" onMouseOver={this.onMouseOver}>
-                        Menu
+
+                <div className="right dropdown menu item">
+                    <div
+                        className="ui sample dropdown"
+                        onMouseOver={ () => this.setState({displayMenu: true}) }
+                        onMouseOut={ () => this.setState({displayMenu: false}) }
+                    >
+                        <div className="text">Menu</div>
                         <i className="dropdown icon"></i>
-                        <div className="menu">
+                        <div className="menu" style={this.state.displayMenu?{display:'block'}:{display:''}}>
                             { this.props.routes.map((route ,indx) => {
                                 return (    
-                                    <div className="icon item" key={indx}>
-                                        <Link to={route.path} key={indx}>
-                                            <i className={route.icon + "icon"}></i>{route.display}
-                                        </Link>
-                                    </div>
+                                    
+                                    <Link to={route.path} key={indx}>
+                                        <div className="ui icon item" key={indx}
+                                            onMouseOver={(e) => { e.currentTarget.className= "ui icon active item"} }
+                                            onMouseOut={(e) => { e.currentTarget.className = "ui icon item"} }
+                                        >
+                                            <i className={route.icon + "icon"}></i>
+                                            <span style={{color: "teal"}}>{route.display}</span>
+                                        </div>
+                                    </Link>
                                 );
                             })}
                         </div>

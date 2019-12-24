@@ -10,7 +10,7 @@ class SearchBar extends Component {
         super(props);
 
         this.state = {
-            suggestionIndex: -1,
+            indexOfSelectedOption: -1,
             userInput: "",
             suggestions: []
         }
@@ -22,7 +22,17 @@ class SearchBar extends Component {
     
         //User press enter to search city
         if (keyCode === 13) {
-            if (userInput !== '' && userInput !== ' ') {
+            if (indexOfSelectedOption > -1 && indexOfSelectedOption < suggestions.length)
+            {
+                this.props.fetch_city_info(suggestions[indexOfSelectedOption].LocalizedName + ", " + suggestions[indexOfSelectedOption].Country.LocalizedName);
+                this.setState({
+                    userInput: "",
+                    suggestions: [],
+                    indexOfSelectedOption: -1,
+        
+                })
+            }
+            else if (userInput !== '' && userInput !== ' ') {
                 this.props.fetch_city_info(userInput);
             }
         }
@@ -40,7 +50,6 @@ class SearchBar extends Component {
         const {id} = event.currentTarget;
         const { suggestions } = this.state;
         if (id > -1 && id < suggestions.length) {
-            console.log(suggestions[id])
             this.props.fetch_city_info(suggestions[id].LocalizedName + ", " + suggestions[id].Country.LocalizedName);
             this.setState({
                 suggestions: [],
@@ -59,21 +68,21 @@ class SearchBar extends Component {
                 this.setState({
                     userInput: value,
                     suggestions: data,
-                    suggestionIndex: -1,
+                    indexOfSelectedOption: -1,
         
                 })
             }).catch((err) => {
                 this.setState({
                     userInput: value,
                     suggestions: [],
-                    suggestionIndex: -1,
+                    indexOfSelectedOption: -1,
                 });
             })
         } else {
             this.setState({
                 userInput: value,
                 suggestions: [],
-                suggestionIndex: -1,
+                indexOfSelectedOption: -1,
             })
         }
     }
@@ -90,7 +99,10 @@ class SearchBar extends Component {
             { suggestions.map(({Key, LocalizedName, Country}, indx) => {
                 return (
                     <div className="category" key={`cat_${Key}`} >
-                        <div className="name" key={`name_${Key}`}>{ Country.LocalizedName }</div>
+                        <div className="name" key={`name_${Key}`}>
+                            <i className={ Country.ID.toLowerCase() + " flag"}></i>
+                            <span>{ Country.LocalizedName }</span>
+                        </div>
                         <div className="results" key={`inner_results_${Key}`}>
                             <div
                                 className={ (indexOfSelectedOption === indx)?"result active":"result" }
@@ -110,7 +122,6 @@ class SearchBar extends Component {
     }
     
     render = () => {
-        console.log(this.state);
         const { userInput } = this.state;
         return (
             <div className="ui search category focus">
