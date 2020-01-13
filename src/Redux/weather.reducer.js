@@ -1,29 +1,24 @@
-import { FETCH_CITY_INFO, FETCH_CITY_DATA } from './weather.action';
+import { GET_WEATHER, GET_CITY_DATA } from './weather.action';
 
-export const fetch_city_data = (state = {city: [], flag: false}, action) => {
-    switch(action.type) {
+import fakeData from '../fakeData';
 
-        case FETCH_CITY_INFO:
-            return {
-                city: action.payload.data || [],
-                flag: true
-            } 
-        default:
-            return {
-                city: state.city,
-                flag: false
-            }
-    }
+const initValues = {
+    city_data: fakeData.city[0],
+    city_weather: fakeData.city_current_status[0],
+    forecast: []
 }
-export const fetch_forecast = (state = {current_status: [], forecast: [] }, action) => {
-    if (action.type === FETCH_CITY_DATA) {
-        const current_status = action.payload[0] || { data: []}
-        const forecast = action.payload[1] || { data: []}
-        return {
-            current_status: current_status.data,
-            forecast: forecast.data
-        }
-    } else {
-        return state;
+
+export const weather_data = (state = initValues, action) => {
+    switch(action.type) {
+        case GET_CITY_DATA:
+            console.log(" GET_CITY_DATA");
+            return Object.assign({}, state);
+        
+        case GET_WEATHER:
+            console.log("GET_WEATHER");
+            return Object.assign({}, state);
+        
+        default:
+            return state; 
     }
 }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import AccuWeatherAPI from '../api/AccuWeather';
 
-import { fetch_city_info } from '../Redux/weather.action';
+import { FETCH_CITY_DATA } from '../Redux/weather.action';
 
 class SearchBar extends Component {
     constructor(props) {
@@ -14,7 +14,6 @@ class SearchBar extends Component {
             userInput: "",
             suggestions: []
         }
-        this.props.fetch_city_info("Tel Aviv, Israel");
     }
     onKeyPressed = (event) => {
         const { keyCode } = event;
@@ -24,7 +23,7 @@ class SearchBar extends Component {
         if (keyCode === 13) {
             if (indexOfSelectedOption > -1 && indexOfSelectedOption < suggestions.length)
             {
-                this.props.fetch_city_info(suggestions[indexOfSelectedOption].LocalizedName + ", " + suggestions[indexOfSelectedOption].Country.LocalizedName);
+                this.props.FETCH_CITY_DATA(suggestions[indexOfSelectedOption].LocalizedName + ", " + suggestions[indexOfSelectedOption].Country.LocalizedName);
                 this.setState({
                     userInput: "",
                     suggestions: [],
@@ -144,7 +143,7 @@ class SearchBar extends Component {
 }
 
 function mapDispacthToProps(dispatch) {
-    return bindActionCreators({ fetch_city_info }, dispatch);
+    return bindActionCreators({ FETCH_CITY_DATA }, dispatch);
 }
 
 export default connect(null, mapDispacthToProps)(SearchBar);
