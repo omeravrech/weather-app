@@ -1,23 +1,44 @@
-import { GET_WEATHER, GET_CITY_DATA } from './weather.action';
+import { 
+    UPDATE_CITY, 
+    UPDATE_CURRENT,
+    UPDATE_WEATHER,
+    FETCH_CITY_ERROR,
+    INIT_DATA
+ } from './weather.action';
 
-import fakeData from '../fakeData';
+import fakeData from '../fakeData'
 
 const initValues = {
     city_data: fakeData.city[0],
     city_weather: fakeData.city_current_status[0],
-    forecast: []
+    forecast: fakeData.forecast.DailyForecasts
 }
 
-export const weather_data = (state = initValues, action) => {
+export const weather = (state = initValues, action) => {
     switch(action.type) {
-        case GET_CITY_DATA:
-            console.log(" GET_CITY_DATA");
-            return Object.assign({}, state);
+        case UPDATE_CITY:
+            return Object.assign({}, state,
+                {
+                    city_data: action.payload,
+                    city_weather: undefined,
+                    forecast: []
+                }
+            );
         
-        case GET_WEATHER:
-            console.log("GET_WEATHER");
-            return Object.assign({}, state);
+        case UPDATE_CURRENT:
+            return Object.assign({}, state,
+                { city_weather: action.payload }
+            );
         
+        case UPDATE_WEATHER:
+            return Object.assign({}, state,
+                { forecast: action.payload }
+            );
+
+        case FETCH_CITY_ERROR:
+        case INIT_DATA:
+            return initValues;
+
         default:
             return state; 
     }

@@ -6,10 +6,13 @@ export default (function() {
     if (!instance) {
         instance = axios.create({
             baseURL: 'http://dataservice.accuweather.com',
+            headers: {
+                Cookie: 'SameSite=None'
+            }
         });
         instance.interceptors.request.use((config) => {
             config.params = config.params || {};
-            config.params['apikey'] = '50UoAXAqfE59hGZ9YxCsNy18MWX6KKHA';
+            config.params['apikey'] = 'kUrw04i3ylBSbsLgr37yqx5AKGlGnp4r';
             return config;
         });
         return instance;

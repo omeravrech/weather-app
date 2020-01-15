@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
-import AccuWeatherAPI from '../api/AccuWeather';
 
-import { FETCH_CITY_DATA } from '../Redux/weather.action';
+import AccuWeatherAPI from '../api/AccuWeather';
+import { fetchWeatherByObject, fetchWeatherByName } from '../Redux/weather.action';
 
 class SearchBar extends Component {
     constructor(props) {
@@ -23,7 +23,8 @@ class SearchBar extends Component {
         if (keyCode === 13) {
             if (indexOfSelectedOption > -1 && indexOfSelectedOption < suggestions.length)
             {
-                this.props.FETCH_CITY_DATA(suggestions[indexOfSelectedOption].LocalizedName + ", " + suggestions[indexOfSelectedOption].Country.LocalizedName);
+                this.props.fetchWeatherByObject(suggestions[indexOfSelectedOption]);
+
                 this.setState({
                     userInput: "",
                     suggestions: [],
@@ -32,7 +33,7 @@ class SearchBar extends Component {
                 })
             }
             else if (userInput !== '' && userInput !== ' ') {
-                this.props.fetch_city_info(userInput);
+                this.props.fetchWeatherByName(userInput);
             }
         }
         // If user press UP, there are suggestions and we not out the range
@@ -49,7 +50,7 @@ class SearchBar extends Component {
         const {id} = event.currentTarget;
         const { suggestions } = this.state;
         if (id > -1 && id < suggestions.length) {
-            this.props.fetch_city_info(suggestions[id].LocalizedName + ", " + suggestions[id].Country.LocalizedName);
+            this.props.fetchWeatherByObject(suggestions[id]);
             this.setState({
                 suggestions: [],
                 userInput: "",
@@ -123,7 +124,8 @@ class SearchBar extends Component {
     render = () => {
         const { userInput } = this.state;
         return (
-            <div className="ui search category focus">
+            
+            <div className="ui category search item">
                 <div className="ui icon input">
                     <input
                         className="prompt"
@@ -143,7 +145,7 @@ class SearchBar extends Component {
 }
 
 function mapDispacthToProps(dispatch) {
-    return bindActionCreators({ FETCH_CITY_DATA }, dispatch);
+    return bindActionCreators({ fetchWeatherByObject, fetchWeatherByName }, dispatch);
 }
 
 export default connect(null, mapDispacthToProps)(SearchBar);

@@ -7,11 +7,8 @@ const Header = (props) => {
     const [displayMenu, updateDisplay] = useState(false);
 
     return(
-        <div className="ui teal inverted secondary menu">
-            <div className="ui category search item">
-                <SearchBar />
-            </div>
-
+        <div className="ui teal inverted top fixed menu">
+            <SearchBar />
             <div className="right dropdown menu item">
                 <div
                     className="ui sample dropdown"
