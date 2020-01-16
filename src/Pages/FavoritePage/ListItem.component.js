@@ -6,10 +6,13 @@ const ItemList = (props) => {
     return(
         <div className="item">
             <div className="ui icon image">
-                <a><i className="x icon"  onClick={ onRemoveClicked }></i></a>
+                <i className="red x icon"  onClick={ onRemoveClicked }></i>
             </div>
             <div className="ui icon image">
-                <a><i className="eye icon" onClick={ onEyeClicked }></i></a>
+                <i className="teal eye icon" onClick={ onEyeClicked }></i>
+            </div>
+            <div className="ui icon image">
+                <i className={city.Country.ID.toLowerCase() + " flag"}></i>
             </div>
             <div className="content">
                 <div className="header">{city.LocalizedName}</div>

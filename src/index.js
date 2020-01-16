@@ -6,13 +6,19 @@ import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk'
 
 import App from './Components';
-import mainReducer from './Redux/main.reducer';
 import routes from './routes';
+import mainReducer from './Redux/main.reducer';
+import { fetchWeatherByName } from './Redux/weather.action';
 
-const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore);
+const store = createStore(
+    mainReducer,
+    applyMiddleware(ReduxThunk),
+);
+
+store.dispatch(fetchWeatherByName("Tel Aviv Israel"));
 
 ReactDOM.render(
-    <Provider store={createStoreWithMiddleware(mainReducer)}>
+    <Provider store={store}>
         <Router>
             <App routes={routes} />
         </Router>

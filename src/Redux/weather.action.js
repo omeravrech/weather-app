@@ -5,8 +5,6 @@ export const UPDATE_CITY = 'UPDATE_CITY';
 export const UPDATE_CURRENT = 'UPDATE_CURRENT';
 export const UPDATE_WEATHER = 'UPDATE_WEATHER';
 export const FETCH_CITY_ERROR = 'FETCH_CITY_ERROR';
-export const INIT_DATA = 'INIT';
-
 
 export const fetchWeatherByName = (cityName) => {
     return (dispatch) => {
@@ -84,11 +82,5 @@ export const updateWeather = (data) => {
 export const fetchCityError = () => {
     return {
         type: FETCH_CITY_ERROR
-    }
-}
-export const initWeather = () => {
-    return {
-        type: INIT_DATA,
-        payload: 215854
     }
 }

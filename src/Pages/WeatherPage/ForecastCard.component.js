@@ -17,8 +17,14 @@ const ForecastCard = (props) => {
                         width="100%" height="100%"
                     />
                 </div>
-                <div className="eight wide column">{parseInt(props.temperature.day)}</div>
-                <div className="eight wide column">{parseInt(props.temperature.night)}</div>
+                <div className="eight wide column">
+                    <i className="sun outline icon"></i>
+                    {parseInt(props.temperature.day)}°
+                </div>
+                <div className="eight wide column">
+                    <i className="moon outline icon"></i>
+                    {parseInt(props.temperature.night)}°
+                </div>
         </div>
     );
 }

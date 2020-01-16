@@ -1,8 +1,6 @@
 import { ADD, REMOVE, DELETE_ALL } from './favorites.action';
 
-import fakeData from '../fakeData';
-
-export const favoriteList = (state = fakeData.favList, action) => {
+export const favoriteList = (state = [], action) => {
     switch(action.type) {
         case ADD:
             return [...state, action.payload];

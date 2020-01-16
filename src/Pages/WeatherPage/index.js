@@ -27,8 +27,6 @@ class WeatherPage extends Component {
     FavButton = (city) => {
         const {favoriteList} = this.props;
 
-        console.log(favoriteList);
-
         if (favoriteList.filter(({ Key }) => { return Key === city.Key}).length === 1) {
             return (
                 <div className="ui vertical animated button" tabIndex="0" onClick={() => this.props.removeFromFavorite(city.Key)}>
